@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div class="breadcrumb-header justify-content-between"> 
+        <div class="left-content"> 
+            <div>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">Usuarios</h2> 
+            </div>
+        </div> 
+    </div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card " id="tab">
+            <div class="card-body">
+                <div class="col-12">
+                    <form id="formulario-usuarios">
+                        <input class="form-control form-control-sm d-none"
+                               placeholder="Ingresar nombre" type="text" name="Id">
+                        <div class="pd-30 pd-sm-40 bg-gray-200">
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Nombre</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar nombre" type="text" name="Nombre">
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Apellido</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar apellido" type="text" name="Apellido">
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Genero</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <select class="SlectBox form-control form-control-sm" name="Genero">
+                                        <option value="Mujer">Mujer</option>
+                                        <option value="Hombre">Hombre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Teléfono</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar teléfono" type="tel" name="Telefono">
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Dirección</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar dirección" type="text" name="Direccion">
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Usuario</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar usuario" type="text" name="UserName">
+                                </div>
+                            </div>
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-4">
+                                    <label class="form-label mg-b-0">Contraseña</label>
+                                </div>
+                                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                    <input class="form-control form-control-sm"
+                                           placeholder="Ingresar contraseña" type="text" name="Password">
+                                </div>
+                            </div>
+                            <button type="submit"
+                                    class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">
+                                Guardar
+                            </button>
+                            <button type="button" id="btn-reset"
+                                    class="btn btn-secondary pd-x-30 mg-r-5 mg-t-5">
+                                Limpiar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <br>
+                        <table class="table table-bordered table-hover w-100" id="tabla-usuarios">
+                            <thead>
+                                <tr>
+                                    <th class="wd-50p border-bottom-0">Nombre</th>
+                                    <th class="wd-50p border-bottom-0">Apellido</th>
+                                    <th class="wd-20p border-bottom-0">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.dataTables.min.js"></script>
+    @*<script src="~/assets/plugins/datatable/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/responsive.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.bootstrap4.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatable/js/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/buttons.colVis.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/responsive.bootstrap4.min.js"></script>*@
+
+    <script src="~/assets/plugins/notify/js/notifIt.js"></script>
+
+
+    <script src="~/js/Usuarios/usuarios.js"></script>
+
+}

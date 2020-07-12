@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BaseTaxis</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/assets/plugins/notify/css/notifIt.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!-- Favicon -->
+    <!-- Favicon -->
+    <link rel="icon" href="~/assets/img/brand/favicon.png" type="image/x-icon" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.css" rel="stylesheet">
+
+    <!--  Custom Scroll bar-->
+    <link href="~/assets/plugins/mscrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" />
+
+    <!--  Sidebar css -->
+    <link href="~/assets/plugins/sidebar/sidebar.css" rel="stylesheet">
+
+    <!--- Internal Morris css-->
+    <link href="~/assets/plugins/morris.js/morris.css" rel="stylesheet">
+
+    <!--- Style css --->
+    <link href="~/assets/css/style.css" rel="stylesheet">
+
+    <!--- Dark-mode css --->
+    <link href="~/assets/css/style-dark.css" rel="stylesheet">
+
+    <!---Skinmodes css-->
+    <link href="~/assets/css/skin-modes.css" rel="stylesheet" />
+
+    <!--- Animations css-->
+    <link href="~/assets/css/animate.css" rel="stylesheet">
+</head>
+<body class="main-body">
+    <!-- Loader -->
+    <div id="global-loader">
+        <img src="assets/img/loader.svg" class="loader-img" alt="Loader">
+    </div>
+    <!-- /Loader -->
+
+    <div class="page">
+        <!-- main-header opened -->
+        <partial name="_HeaderPartial" />
+        <!-- /main-header -->
+        <!--Horizontal-main -->
+        <partial name="_MenuPartial" />
+        <!--Horizontal-main -->
+
+        <div class="main-content horizontal-content">
+            <div class="container">
+                <main role="main" class="">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+        <!-- Footer opened -->
+        <div class="main-footer ht-40">
+            <div class="container-fluid pd-t-0-f ht-100p">
+                <span>Copyright © 2020 <a href="#">Valex</a>. Designed by <a href="https://www.spruko.com/">Spruko</a> All rights reserved.</span>
+            </div>
+        </div>
+        <!-- Footer closed -->
+    </div>
+    <!-- Back-to-top -->
+    <a href="#top" id="back-to-top"><i class="las la-angle-double-up"></i></a>
+
+    <!-- JQuery min js -->
+
+    <script src="~/assets/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Bundle js -->
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Ionicons js -->
+    <script src="~/assets/plugins/ionicons/ionicons.js"></script>
+
+    <!-- Moment js -->
+    <script src="~/assets/plugins/moment/moment.js"></script>
+
+    <!--Internal Sparkline js -->
+    <script src="~/assets/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Moment js -->
+    <script src="~/assets/plugins/raphael/raphael.min.js"></script>
+
+    <!-- Internal Piety js -->
+    <script src="~/assets/plugins/peity/jquery.peity.min.js"></script>
+
+    <!--Internal  Flot js-->
+    <script src="~/assets/plugins/jquery.flot/jquery.flot.js"></script>
+    <script src="~/assets/plugins/jquery.flot/jquery.flot.pie.js"></script>
+    <script src="~/assets/plugins/jquery.flot/jquery.flot.resize.js"></script>
+    <script src="~/assets/plugins/jquery.flot/jquery.flot.categories.js"></script>
+    <script src="~/assets/js/dashboard.sampledata.js"></script>
+    <script src="~/assets/js/chart.flot.sampledata.js"></script>
+
+    <!-- Sticky js -->
+    <script src="~/assets/js/sticky.js"></script>
+        
+    <!-- Internal Jquery.steps js -->
+    <script src="~/assets/plugins/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/assets/plugins/parsleyjs/parsley.min.js"></script>
+
+    <!-- P-scroll js -->
+    <script src="~/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="~/assets/plugins/perfect-scrollbar/p-scroll.js"></script>
+
+    <!-- Horizontalmenu js-->
+    <script src="~/assets/plugins/sidebar/sidebar.js"></script>
+    <script src="~/assets/plugins/sidebar/sidebar-custom.js"></script>
+
+    <!-- Eva-icons js -->
+    <script src="~/assets/js/eva-icons.min.js"></script>
+
+    <!-- Horizontalmenu js-->
+    <script src="~/assets/plugins/horizontal-menu/horizontal-menu-2/horizontal-menu.js"></script>
+
+    <!--Internal  index js -->
+    <!-- custom js -->
+    <script src="~/assets/js/custom.js"></script>
+    <script type="module" src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

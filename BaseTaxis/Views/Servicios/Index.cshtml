@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Servicios";
+}
+
+<!-- row -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="main-content-label mg-b-5">
+                    Insertar Serivcio
+                </div>
+                <form id="wizard1">
+                    <h3>Cliente</h3>
+                    <section>
+                        <div class="control-group form-group">
+                            <label class="form-label">Teléfono</label>
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Teléfono..." type="text">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">
+                                        <span class="input-group-btn"><i class="fa fa-search"></i></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group form-group">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" class="form-control required" placeholder="Direccion ...">
+                        </div>
+                    </section>
+                    <h3>Información Servicio</h3>
+                    <section>
+                        <div class="control-group form-group">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-control">
+                            </select>
+                        </div>
+                        <div class="control-group form-group">
+                            <label class="form-label">Fecha/Hora</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                    </section>
+                    <h3>Asinación</h3>
+                    <section>
+                        <div class="control-group form-group">
+                            <label class="form-label">Unidad</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /row -->
+<div class="row">
+    <div class="card col-12">
+        <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+                <h4 class="card-title mg-b-0">Servicios</h4>
+            </div>
+        </div>
+        <div class="card-body table-responsive">
+            <div class="panel panel-primary tabs-style-3">
+                <div class="tab-menu-heading">
+                    <div class="tabs-menu ">
+                        <!-- Tabs -->
+                        <ul class="nav panel-tabs">
+                            <li class="">
+                                <a href="#tab11" class="active" data-toggle="tab">
+                                    <i class="fa fa-laptop"></i> Asignados
+                                </a>
+                            </li>
+                            <li><a href="#tab12" data-toggle="tab" class=""><i class="fa fa-cube"></i> Pendientes</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body tabs-menu-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab11">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Unidad</th>
+                                        <th>Direccion</th>
+                                        <th>Telefóno</th>
+                                        <th>Fecha/Hora</th>
+                                        <th>Operadora</th>
+                                        <th>Tipo</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="tab12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Unidad</th>
+                                        <th>Direccion</th>
+                                        <th>Telefóno</th>
+                                        <th>Fecha/Hora</th>
+                                        <th>Operadora</th>
+                                        <th>Tipo</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <!--Internal  Form-wizard js -->
+    <script src="~/assets/js/form-wizard.js"></script>
+
+}
