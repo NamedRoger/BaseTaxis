@@ -4,49 +4,90 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+<div class="breadcrumb-header justify-content-between">
+    <div class="left-content">
+        <div>
+            <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">Asistencias</h2>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
     <div class="col-12">
         <div class="card  custom-card">
             <div class="card-body">
-                <form>
-                    <div class="control-group form-group">
-                        <label class="form-label">Unidad</label>
-                        <input type="text" class="form-control required" placeholder="Unidad ...">
-                    </div>
-                    <div class="input-group">
-                        <button type="submit" class="btn btn-primary">
-                            Agregar
-                        </button>
+                <form class="" id="form-asistencias">
+                    <div class="form-group row ">
+                        <div class="col-10">
+                            <input type="text" class="form-control required" placeholder="Unidad ..." name="unidad">
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-primary">
+                                Agregar
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 pb-1 ">
+        <button class="btn btn-primary float-right" id="btn-guardar">
+            Guardar
+        </button>
+    </div>
+    <div class="col">
         <div class="card ">
             <div class="card-body table-responsive">
-                <table class="table ">
+                <table class="table w-100" id="tabla-asistencias-pasadas">
                     <thead>
                         <tr>
                             <th>Unidad</th>
+                            <th></th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col ">
         <div class="card ">
             <div class="card-body table-responsive">
-                <table class="table ">
+                
+                <table class="table w-100 " id="tabla-asistencias-actuales">
                     <thead>
                         <tr>
                             <th>Unidad</th>
+                            <th></th>
                         </tr>
                     </thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
 
+@section Scripts{
+
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.dataTables.min.js"></script>
+    @*<script src="~/assets/plugins/datatable/js/dataTables.responsive.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/responsive.dataTables.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/jquery.dataTables.js"></script>
+        <script src="~/assets/plugins/datatable/js/dataTables.bootstrap4.js"></script>
+        <script src="~/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/buttons.bootstrap4.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/jszip.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/pdfmake.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/vfs_fonts.js"></script>
+        <script src="~/assets/plugins/datatable/js/buttons.html5.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/buttons.print.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/buttons.colVis.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/dataTables.responsive.min.js"></script>*@
+        @*<script src="~/assets/plugins/datatable/js/responsive.bootstrap4.min.js"></script>*@
+
+    <script src="~/assets/plugins/notify/js/notifIt.js"></script>
+
+    <script src="~/js/Asistencias/asistencias.js"></script>
+
+}

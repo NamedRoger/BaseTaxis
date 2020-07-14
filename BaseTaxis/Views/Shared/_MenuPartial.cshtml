@@ -31,12 +31,15 @@
                             Asistencias
                         </a>
                     </li>
-                    <li aria-haspopup="true">
-                        <a asp-controller="Usuarios" asp-action="Index" class="">
-                            <i class="si si-people"></i>
-                            Usuarios
-                        </a>
-                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li aria-haspopup="true">
+                            <a asp-controller="Usuarios" asp-action="Index" class="">
+                                <i class="si si-people"></i>
+                                Usuarios
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nav>
             <!--Nav-->
