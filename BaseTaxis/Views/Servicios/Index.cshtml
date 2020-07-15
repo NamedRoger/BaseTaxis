@@ -10,15 +10,15 @@
                 <div class="main-content-label mg-b-5">
                     Insertar Serivcio
                 </div>
-                <form id="wizard1">
+                <form id="form-servicios">
                     <h3>Cliente</h3>
                     <section>
                         <div class="control-group form-group">
                             <label class="form-label">Teléfono</label>
                             <div class="input-group">
-                                <input class="form-control" placeholder="Teléfono..." type="text">
+                                <input class="form-control" placeholder="Teléfono..." type="text" name="Telefono" id="Telefono">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="button">
+                                    <button class="btn btn-primary" type="button" id="buscar-cliente">
                                         <span class="input-group-btn"><i class="fa fa-search"></i></span>
                                     </button>
                                 </span>
@@ -26,26 +26,27 @@
                         </div>
                         <div class="control-group form-group">
                             <label class="form-label">Dirección</label>
-                            <input type="text" class="form-control required" placeholder="Direccion ...">
+                            <input type="text" class="form-control required" placeholder="Direccion ..." name="Direccion" id="Direccion">
                         </div>
                     </section>
                     <h3>Información Servicio</h3>
                     <section>
                         <div class="control-group form-group">
                             <label class="form-label">Tipo</label>
-                            <select class="form-control">
+                            <select class="form-control" name="IdTipoServicio" id="select-tipo-servicio">
+                                
                             </select>
                         </div>
-                        <div class="control-group form-group">
+                        <div class="control-group form-group " id="div-input-fechahora">
                             <label class="form-label">Fecha/Hora</label>
-                            <input type="datetime-local" class="form-control">
+                            <input type="datetime-local" name="FechaHora" class="form-control">
                         </div>
                     </section>
                     <h3>Asinación</h3>
                     <section>
                         <div class="control-group form-group">
-                            <label class="form-label">Unidad</label>
-                            <input type="text" class="form-control">
+                            <label class="form-label" >Unidad</label>
+                            <input type="text" name="Unidad" class="form-control">
                         </div>
                     </section>
                 </form>
@@ -79,7 +80,7 @@
                 <div class="panel-body tabs-menu-body">
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab11">
-                            <table class="table">
+                            <table class="table w-100" id="tabla-asignados">
                                 <thead>
                                     <tr>
                                         <th>Unidad</th>
@@ -96,7 +97,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="tab12">
-                            <table class="table">
+                            <table class="table w-100" id="tabla-reservados">
                                 <thead>
                                     <tr>
                                         <th>Unidad</th>
@@ -115,14 +116,22 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 @section Scripts{
 
-    <!--Internal  Form-wizard js -->
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.dataTables.min.js"></script>
+
     <script src="~/assets/js/form-wizard.js"></script>
+
+    <script src="~/assets/plugins/notify/js/notifIt.js"></script>
+    <script src="~/assets/plugins/sweet-alert/jquery.sweet-alert.js"></script>
+    <script src="~/assets/plugins/sweet-alert/sweetalert.min.js"></script>
+
+    <script src="~/js/Servicios/Servicios.js"></script>
 
 }

@@ -26,7 +26,13 @@ namespace BaseTaxis.Controllers.API
         public async Task<ActionResult<IEnumerable<AsistenciaDTO>>> Asistencias()
         {
             var hora = DateTime.Now.Hour - 1;
+            var dia = DateTime.Now.Day;
+            var mes = DateTime.Now.Month;
+            var year = DateTime.Now.Year;
             var asistencias = await _context.Asistencias.Where(a => a.Fecha.Hour == hora)
+                .Where(a => a.Fecha.Day == dia)
+                .Where(a => a.Fecha.Month == mes)
+                .Where(a => a.Fecha.Year == year)
                 .Select(a => AsistenciaToDTO(a))
                 .ToListAsync();
 

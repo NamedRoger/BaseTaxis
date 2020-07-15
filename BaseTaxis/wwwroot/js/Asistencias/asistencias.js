@@ -73,13 +73,12 @@ $(async function () {
 
                 Asistencias.asistenciasPasadas.dataTemp = asistenciasTemporales;
                 if (asistenciasTemporales.length > 0) {
-                    asistenciasPasadas.forEach(ap => {
-                        asistenciasTemporales.forEach(at => {
-                            if (at.unidad !== ap.unidad) {
-                                console.log(at);
-                                asistenciasPasadasFiltradas.push(ap);
-                            }
-                        });
+                    asistenciasPasadas
+                    asistenciasPasadas.forEach(at => {
+                        let existAsistencia = asistenciasTemporales.find(ap => ap.unidad == at.unidad);
+                        if (!existAsistencia) {
+                            asistenciasPasadasFiltradas.push(at);
+                        }
                     });
                     Asistencias.asistenciasPasadas.data = asistenciasPasadasFiltradas;
                 } else {
