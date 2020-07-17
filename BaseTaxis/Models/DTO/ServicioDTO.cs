@@ -18,5 +18,6 @@ namespace BaseTaxis.Models.DTO
         public string IdEstatusServicio { get; set; }
         public string FechaHora { get; set; } = DateTime.Now.ToString();
         public string IdUsuario { get; set; }
+        public string Usuario { get; set; }
     }
 }

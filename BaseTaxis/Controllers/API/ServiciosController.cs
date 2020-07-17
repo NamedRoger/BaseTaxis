@@ -28,8 +28,10 @@ namespace BaseTaxis.Controllers.API
         public async Task<ActionResult<IEnumerable<ServicioDTO>>> GetServicios()
         {
             return await _context.Servicios.Where(s => s.EstatusServicio.Nombre != "Cancelado")
+                .Where(s => s.EstatusServicio.Nombre != "Cancelado")
                 .Include(s => s.Cliente)
                 .Include(s => s.TipoServicio)
+                .Include(s => s.User)
                 .Include(s => s.EstatusServicio)
                 .Select(s => ServicioToDTO(s))
                 .ToListAsync();
@@ -39,7 +41,11 @@ namespace BaseTaxis.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<ServicioDTO>> GetServicio(Guid id)
         {
-            var servicio = ServicioToDTO(await _context.Servicios.FindAsync(id));
+            var servicio = ServicioToDTO(await _context.Servicios.Include(s => s.Cliente)
+                .Include(s => s.TipoServicio)
+                .Include(s => s.User)
+                .Include(s => s.EstatusServicio)
+                .FirstOrDefaultAsync (s => s.Id == id));
 
             if (servicio == null)
             {
@@ -133,7 +139,7 @@ namespace BaseTaxis.Controllers.API
                 _context.Servicios.Add(nuevoServicio);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetServicio", new { id = servicio.Id }, servicio);
+                return CreatedAtAction("GetServicio", new { id = nuevoServicio.Id }, ServicioToDTO(nuevoServicio));
             }
             catch (Exception e)
             {
@@ -144,16 +150,25 @@ namespace BaseTaxis.Controllers.API
 
         // DELETE: api/Servicios/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ServicioDTO>> DeleteServicio(Guid id)
+        public async Task<ActionResult<ServicioDTO>> CancelarServicio(Guid id)
         {
-            var servicio = await _context.Servicios.FindAsync(id);
+            var servicio = await _context.Servicios.Include(s => s.Cliente)
+                .Include(s => s.EstatusServicio)
+                .Include(s => s.TipoServicio)
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
             if (servicio == null)
             {
                 return NotFound();
             }
 
-            _context.Servicios.Remove(servicio);
-            await _context.SaveChangesAsync();
+            var estatusServicio = await _context.EstatusServicios.FirstOrDefaultAsync(es => 
+            es.Nombre.ToUpper() == "Cancelado".ToUpper());
+
+            servicio.IdEstatusServicio = estatusServicio.Id;
+
+            await _context.SaveChangesAsync(); //5256781617941492
 
             return ServicioToDTO(servicio);
         }
@@ -172,6 +187,7 @@ namespace BaseTaxis.Controllers.API
             IdEstatusServicio = servicio.IdEstatusServicio.ToString(),
             IdTipoServicio = servicio.IdTipoServicio.ToString(),
             IdUsuario = servicio.IdUsuario.ToString(),
+            Usuario = servicio.User.UserName,
             Telefono = servicio.Cliente.Telefono,
             TipoServicio = servicio.TipoServicio.Nombre,
             Unidad = servicio.Unidad

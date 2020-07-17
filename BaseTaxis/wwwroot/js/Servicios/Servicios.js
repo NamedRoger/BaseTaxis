@@ -1,47 +1,4 @@
-﻿$.fn.steps.setStep = function (step) {
-    var currentIndex = $(this).steps('getCurrentIndex');
-    for (var i = 0; i < Math.abs(step - currentIndex); i++) {
-        if (step > currentIndex) {
-            $(this).steps('next');
-        }
-        else {
-            $(this).steps('previous');
-        }
-    }
-};
-
-$(async function () {
-    let createWizard = async () => {
-        $('#form-servicios').steps({
-            headerTag: 'h3',
-            bodyTag: 'section',
-            autoFocus: true,
-            titleTemplate: '<span class="number">#index#<\/span> <span class="title">#title#<\/span>',
-            transitionEffect: "fade",
-            labels: {
-                cancel: "Cancelar",
-                current: "current step:",
-                pagination: "Paginación",
-                finish: "Terminar",
-                next: "Siguiente",
-                previous: "Anterior",
-                loading: "Loading ..."
-            },
-            enableAllSteps: true,
-            onFinishing: async () => {
-                return await agregarServicio();
-            },
-            onFinished: async (event, currentIdx) => {
-                $("#form-servicios").steps("destroy");
-                await createWizard();
-                cargarBotnonBuscar();
-                recargatTablas();
-                //$("#wizard1").steps("setStep", 0);
-            }
-        });
-    }
-    await createWizard();
-
+﻿$(async function () {
     const Servicios = {
         apiUrl: "api/Servicios",
         servicios: [],
@@ -56,8 +13,14 @@ $(async function () {
             }
         },
         formulario: {
+            currenTab: 0,
             form: document.querySelector("#form-servicios"),
             inputs: [""],
+            btns: {
+                steps: document.querySelectorAll(".stepper-step"),
+                prev: document.querySelector("#btn-step-prev"),
+                next: document.querySelector("#btn-step-next"),
+            },
             clienteNuevo: false
         },
         TiposServicios: {
@@ -76,6 +39,81 @@ $(async function () {
             }
         }
 
+    }
+
+    // Formulario Step
+    let showTab = n => {
+        let tabs = document.querySelectorAll(".stepper-content .tab-form ");
+
+        tabs[n].style.display = "block";
+
+        if (n === 0)
+            Servicios.formulario.btns.prev.style.display = "none";
+        else
+            Servicios.formulario.btns.prev.style.display = "inline";
+
+        if (n === (tabs.length - 1)) {
+            Servicios.formulario.btns.next.innerHTML = "Guardar";
+        }
+        else {
+            Servicios.formulario.btns.next.innerHTML = "Siguiente";
+        }
+        ActiveStepIndicador(n);
+    }
+
+    let setTab = async (tab) => {
+        let tabs = document.querySelectorAll(".stepper-content .tab-form ");
+        if (tab <= tabs.length) {
+            tabs[Servicios.formulario.currenTab].style.display = "none";
+        }
+        Servicios.formulario.currenTab = tab;
+        if (Servicios.formulario.currenTab >= tabs.length) {
+            //...the form gets submitted:
+            let result = await agregarServicio();
+            if (result) {
+                Servicios.formulario.form.reset();
+                Servicios.formulario.currenTab = 0;
+                setTab(0);
+                recargatTablas();
+                cargarBotones();
+                tdToIput();
+            }
+            
+            return;
+        }
+        showTab(Servicios.formulario.currenTab);
+    }
+
+    let ActiveStepIndicador = (tab) => {
+        let steps = Servicios.formulario.btns.steps;
+        for (let i = 0; i < steps.length; i++) {
+            steps[i].classList.remove("stepper-step-isActive");
+            steps[i].classList.remove("stepper-step-isValid");
+        }
+
+        for (let i = 0; i < tab; i++) {
+            steps[i].classList.add("stepper-step-isValid");
+        }
+
+        steps[tab].classList.add("stepper-step-isActive");
+    }
+
+    showTab(Servicios.formulario.currenTab);
+
+    Servicios.formulario.btns.steps.forEach((stp,idx) => {
+        stp.onclick = () => {
+            setTab(idx);
+        }
+    });
+
+    Servicios.formulario.btns.next.onclick = () => {
+        let tab = Servicios.formulario.currenTab + 1;
+        setTab(tab);
+
+    }
+    Servicios.formulario.btns.prev.onclick = () => {
+        let tab = Servicios.formulario.currenTab - 1;
+        setTab(tab);
     }
 
     //------------------------------------ botones -----------------------------------------------
@@ -104,7 +142,7 @@ $(async function () {
                 { data: 'direccion' },
                 { data: 'telefono' },
                 { data: 'fechaHora' },
-                { data: 'idUsuario' },
+                { data: 'usuario' },
                 { data: 'tipoServicio' },
                 { data: 'acciones' }
             ],
@@ -123,7 +161,7 @@ $(async function () {
                 { data: 'direccion' },
                 { data: 'telefono' },
                 { data: 'fechaHora' },
-                { data: 'idUsuario' },
+                { data: 'usuario' },
                 { data: 'tipoServicio' },
                 { data: 'acciones' }
             ],
@@ -134,13 +172,54 @@ $(async function () {
         return tabla;
     }
 
+    let cargarBotones = () => {
+        let btnCancelar = document.querySelectorAll(".btn-cancelar");
+        btnCancelar.forEach(btn => {
+            btn.onclick = async () => {
+                let servicioIdx = Servicios.servicios.findIndex(s => s.id == btn.dataset.id);
+                let servicio = Servicios.servicios.find(s => s.id == btn.dataset.id);
+
+                let result = await cancelarServicio(servicio.id);
+                if (result) {
+                    Servicios.servicios.splice(servicioIdx, 1);
+                    recargatTablas();
+                    cargarBotones();
+                    tdToIput();
+                    notificacion("Se ha cancelado el servicio", "success");
+                } else {
+                    notificacion("No se pudo cancelar el servicio", "error");
+                }
+            }
+        });
+    }
+
+    let tdToIput = () => {
+        let tds = document.querySelectorAll("table tr  td:first-child");
+        let input = document.createElement("input");
+        let activo = false;
+        tds.forEach(td => {
+            td.ondblclick = () => {
+                let unidad = td.textContent;
+                if (activo) {
+                    td.innerHTML = `${input.value}`;
+                    activo = false;
+                } else {
+                    td.innerHTML = "";
+                    input.value = unidad;
+                    td.appendChild(input);
+                    activo = true;
+                }
+            }
+        });
+    }
+
     let getServicios = async () => {
         let result = await ajaxHelper(Servicios.apiUrl);
         if (result.ok) {
             Servicios.servicios = await result.json();
             AgruparPorTipo();
         } else {
-            notificacion("Ocurrio un error al cargar los servicios","error");
+            notificacion("Ocurrio un error al cargar los servicios", "error");
         }
     }
 
@@ -155,7 +234,7 @@ $(async function () {
         Servicios.tabla.reservados.data = pendientes;
     }
 
-   
+
 
     let agregarServicio = async () => {
         let data = new FormData(Servicios.formulario.form);
@@ -176,13 +255,17 @@ $(async function () {
 
     }
 
-    let cancelarServicio = async () => {
+    let serivicioAsignado = async () => {
 
+    }
+
+    let cancelarServicio = async (id) => {
+        let result = await ajaxHelper(`${Servicios.apiUrl}/${id}`, `delete`);
+        return result.ok;
     }
 
     // ---------------------------------- Clientes ---------------------------------------------------
     let buscarCliente = async (telefono) => {
-        console.log("click buscar")
         let result = await ajaxHelper(`${Servicios.Clientes.apiUrl}/${telefono}`);
         if (result.ok) {
             return {
@@ -197,7 +280,7 @@ $(async function () {
         }
     }
 
-   
+
 
     //----------------------------------- Tipo Servicios ---------------------------------------------
     let getTipoServicios = async () => {
@@ -209,30 +292,35 @@ $(async function () {
 
             let opts = await result.json();
             Servicios.TiposServicios.select.options = opts;
-            
+
             let requiereFecha = opts.find(o => o.nombre.toUpperCase().trim() === "RESERVADO");
             Servicios.TiposServicios.select.requiereFecha = requiereFecha.id;
         }
     }
 
-    Servicios.TiposServicios.select.tag.onchange = () => {
-        let tipoServicio = Servicios.TiposServicios.select.tag.value;
+    let crearEventoChangeSelect = () => {
+        Servicios.TiposServicios.select.tag.onchange = () => {
+            
+            let tipoServicio = Servicios.TiposServicios.select.tag.value;
 
-        if (tipoServicio === Servicios.TiposServicios.select.requiereFecha) {
-            document.querySelector("#div-input-fechahora").classList.remove("d-none");
-        } else {
-            document.querySelector("#div-input-fechahora").classList.add("d-none");
+            if (tipoServicio === Servicios.TiposServicios.select.requiereFecha) {
+                document.querySelector("#div-input-fechahora").classList.remove("d-none");
+            } else {
+                document.querySelector("#div-input-fechahora").classList.add("d-none");
+            }
         }
     }
 
     let cargarSelect = () => {
+        
         Servicios.TiposServicios.select.options.forEach(op => {
             Servicios.TiposServicios.select.tag.appendChild(createOption(op.id, op.nombre));
         });
 
-        if (Servicios.TiposServicios.select.tag.value !== Servicios.TiposServicios.select.requiereFecha) {
+        if (Servicios.TiposServicios.select.tag.value != Servicios.TiposServicios.select.requiereFecha) {
             document.querySelector("#div-input-fechahora").classList.add("d-none");
         }
+
     }
 
     let createOption = (value, Texto) => {
@@ -245,38 +333,40 @@ $(async function () {
     //-------------------------------------------------- Formulario -------------------------------
 
     //--------------------------------------------------- Main -----------------------------------
-    
-        //cargar form 
 
-        //Tipo servicios
-        await getTipoServicios();
+    //cargar form 
 
-        cargarSelect();
-        cargarBotnonBuscar();
+    //Tipo servicios
+    await getTipoServicios();
 
-        //servicios 
-        await getServicios();
+    cargarSelect();
+    crearEventoChangeSelect();
+    cargarBotnonBuscar();
 
-        let tablaAsignados = createTableServiciosAsignados();
-        let tablaPendientes = createTableSerivciosPendientes();
+    //servicios 
+    await getServicios();
 
+    let tablaAsignados = createTableServiciosAsignados();
+    let tablaPendientes = createTableSerivciosPendientes();
+    cargarBotones();
+    tdToIput();
 
     let recargatTablas = () => {
-        console.log("Hola");
         AgruparPorTipo();
+
         tablaAsignados.clear().draw();
         tablaAsignados.rows.add(tranformarInformacionAsignados(Servicios.tabla.asignados.data)).draw();
 
         tablaPendientes.clear().draw();
         tablaPendientes.rows.add(tranformarInformacionPendientes(Servicios.tabla.reservados.data)).draw();
     }
-   
+
 });
 
 let ajaxHelper = (url, method = "get", body = null) => {
     let configInit = {
         headers: {
-           
+
         },
         method: method
     }
@@ -307,6 +397,7 @@ class Asignado {
         telefono,
         tipoServicio,
         idUsuario,
+        usuario,
         fechaHora,
         idx
     ) {
@@ -316,9 +407,10 @@ class Asignado {
         this.telefono = telefono;
         this.tipoServicio = tipoServicio;
         this.idUsuario = idUsuario;
+        this.usuario = usuario;
         this.fechaHora = fechaHora;
         this.idx = idx;
-        this.acciones = `<button class="btn btn-sm btn-danger btn-cancelar" data-id=${idx}>Cancelar</button>`;
+        this.acciones = `<button class="btn btn-sm btn-danger btn-cancelar" data-id=${id}>Cancelar</button>`;
     }
 }
 
@@ -329,6 +421,7 @@ class Pendiente {
         telefono,
         tipoServicio,
         idUsuario,
+        usuario,
         fechaHora,
         idx
     ) {
@@ -338,23 +431,24 @@ class Pendiente {
         this.telefono = telefono;
         this.tipoServicio = tipoServicio;
         this.idUsuario = idUsuario;
+        this.usuario = usuario;
         this.fechaHora = fechaHora;
         this.idx = idx;
-        this.acciones = `<button class="btn btn-sm btn-danger btn-cancelar" data-id=${idx}>Cancelar</button>
-            <button class="btn btn-sm btn-success btn-cancelar" data-id=${idx}>Asignado</button>
+        this.acciones = `<button class="btn btn-sm btn-danger btn-cancelar" data-id=${id}>Cancelar</button>
+            <button class="btn btn-sm btn-success btn-cancelar" data-id=${id}>Asignado</button>
         `;
     }
 }
 let tranformarInformacionAsignados = (data) => {
     let dataResult = [];
     data.forEach((d, idx) => dataResult.push(new Asignado(d.id, d.unidad, d.direccion,
-        d.telefono, d.tipoServicio, d.idUsuario, d.fechaHora,idx)));
+        d.telefono, d.tipoServicio, d.idUsuario, d.usuario, d.fechaHora, idx)));
     return dataResult;
 }
 
 let tranformarInformacionPendientes = (data) => {
     let dataResult = [];
     data.forEach((d, idx) => dataResult.push(new Pendiente(d.id, d.unidad, d.direccion,
-        d.telefono, d.tipoServicio, d.idUsuario, d.fechaHora, idx)));
+        d.telefono, d.tipoServicio, d.idUsuario, d.usuario, d.fechaHora, idx)));
     return dataResult;
 }

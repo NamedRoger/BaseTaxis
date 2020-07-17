@@ -1,6 +1,120 @@
 ﻿@{
     ViewData["Title"] = "Servicios";
 }
+<style>
+    #form-servicios {
+        background-color: #ffffff;
+        width: 100%;
+        min-width: 300px;
+    }
+
+    .stepper-steps {
+        height: 72px;
+        background-color: #fff;
+        border-radius: 3px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    .stepper-steps-isOffset {
+        position: relative;
+        top: -30px;
+        margin: 0 15px -30px 15px;
+    }
+
+    .stepper-content {
+        padding: 24px;
+    }
+
+    .stepper-step {
+        float: left;
+        width: 33.333333333333%;
+        padding: 24px;
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.87);
+        position: relative;
+        text-align: center;
+    }
+
+        .stepper-step:not(.stepper-step-isDisabled):hover, .stepper-step:not(.stepper-step-isDisabled):hover .stepper-stepContent {
+            background-color: #F5F5F5;
+        }
+
+        .stepper-step:first-child {
+            text-align: left;
+        }
+
+        .stepper-step:last-child {
+            text-align: right;
+        }
+
+        .stepper-step::after {
+            content: '';
+            position: absolute;
+            bottom: 36px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #BDBDBD;
+        }
+
+        .stepper-step:first-child::after {
+            left: 24px;
+        }
+
+        .stepper-step:last-child::after {
+            right: 24px;
+        }
+
+    .stepper-step-isActive {
+        font-weight: 600;
+    }
+
+    .stepper-step-isValid {
+        font-weight: 600;
+    }
+
+    .stepper-step-isDisabled {
+        color: rgba(0, 0, 0, 0.38);
+        cursor: default;
+    }
+
+    .stepper-stepMarker {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        text-align: center;
+        color: white;
+        line-height: 24px;
+        background-color: rgba(0, 0, 0, 0.38);
+        border-radius: 24px;
+        font-weight: 100;
+        font-size: 12px;
+    }
+
+    .stepper-step-isActive .stepper-stepMarker {
+        background-color: #2196F3;
+    }
+
+    .stepper-step-isValid .stepper-stepMarker {
+        text-indent: -10000px;
+        background: url('data:image/svg+xml;charset=utf8,<svg fill="#FFFFFF" height="20" viewBox="0 0 24 24" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/> <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>') no-repeat #2196F3;
+        background-position: 2px 1px;
+        background-color: #2196F3;
+    }
+
+    .stepper-stepContent {
+        display: inline-block;
+        position: relative;
+        z-index: 2;
+        padding: 0 8px;
+        background-color: #fff;
+    }
+
+    .stepper-content .tab-form {
+        display: none;
+    }
+</style>
 
 <!-- row -->
 <div class="row">
@@ -11,44 +125,73 @@
                     Insertar Serivcio
                 </div>
                 <form id="form-servicios">
-                    <h3>Cliente</h3>
-                    <section>
-                        <div class="control-group form-group">
-                            <label class="form-label">Teléfono</label>
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Teléfono..." type="text" name="Telefono" id="Telefono">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="button" id="buscar-cliente">
-                                        <span class="input-group-btn"><i class="fa fa-search"></i></span>
-                                    </button>
-                                </span>
+                    <div class="stepper-steps">
+                        <div class="stepper-step ">
+                            <div class="stepper-stepContent ">
+                                <span class="stepper-stepMarker">1</span>Cliente
                             </div>
                         </div>
-                        <div class="control-group form-group">
-                            <label class="form-label">Dirección</label>
-                            <input type="text" class="form-control required" placeholder="Direccion ..." name="Direccion" id="Direccion">
+                        <div class="stepper-step">
+                            <div class="stepper-stepContent">
+                                <span class="stepper-stepMarker">2</span>Informacións Servicio
+                            </div>
                         </div>
-                    </section>
-                    <h3>Información Servicio</h3>
-                    <section>
-                        <div class="control-group form-group">
-                            <label class="form-label">Tipo</label>
-                            <select class="form-control" name="IdTipoServicio" id="select-tipo-servicio">
-                                
-                            </select>
+                        <div class="stepper-step">
+                            <div class="stepper-stepContent">
+                                <span class="stepper-stepMarker">3</span>Asignación
+                            </div>
                         </div>
-                        <div class="control-group form-group " id="div-input-fechahora">
-                            <label class="form-label">Fecha/Hora</label>
-                            <input type="datetime-local" name="FechaHora" class="form-control">
+                    </div>
+                    <div class="stepper-content">
+                        <div class="tab-form">
+                            <h4>Cliente</h4>
+                            <section class="">
+                                <div class="control-group form-group">
+                                    <label class="form-label">Teléfono</label>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Teléfono..." type="text" name="Telefono" id="Telefono">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" id="buscar-cliente">
+                                                <span class="input-group-btn"><i class="fa fa-search"></i></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="control-group form-group">
+                                    <label class="form-label">Dirección</label>
+                                    <input type="text" class="form-control required" placeholder="Direccion ..." name="Direccion" id="Direccion">
+                                </div>
+                            </section>
                         </div>
-                    </section>
-                    <h3>Asinación</h3>
-                    <section>
-                        <div class="control-group form-group">
-                            <label class="form-label" >Unidad</label>
-                            <input type="text" name="Unidad" class="form-control">
+                        <div class="tab-form">
+                            <h4>Información Servicio</h4>
+                            <section>
+                                <div class="control-group form-group">
+                                    <label class="form-label">Tipo</label>
+                                    <select class="form-control" name="IdTipoServicio" id="select-tipo-servicio">
+                                    </select>
+                                </div>
+                                <div class="control-group form-group " id="div-input-fechahora">
+                                    <label class="form-label">Fecha/Hora</label>
+                                    <input type="datetime-local" name="FechaHora" class="form-control">
+                                </div>
+                            </section>
                         </div>
-                    </section>
+                        <div class="tab-form">
+                            <h4>Asignación</h4>
+                            <section>
+                                <div class="control-group form-group">
+                                    <label class="form-label">Unidad</label>
+                                    <input type="text" name="Unidad" class="form-control">
+                                </div>
+                            </section>
+                        </div>
+                        <div class="stepper-actions">
+                            <button type="button" id="btn-step-prev" class="btn btn-default btn-lg btn-simple mbn">Anterior</button>
+                            <button type="button"  id="btn-step-next" class="btn btn-info btn-lg btn-simple pull-right mbn">Siguiente</button>
+                            <button type="submit"  id="btn-step-submit " class="btn btn-info btn-lg btn-simple d-none pull-right mbn">Guardar</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -56,67 +199,69 @@
 </div>
 <!-- /row -->
 <div class="row">
-    <div class="card col-12">
-        <div class="card-header pb-0">
-            <div class="d-flex justify-content-between">
-                <h4 class="card-title mg-b-0">Servicios</h4>
-            </div>
-        </div>
-        <div class="card-body table-responsive">
-            <div class="panel panel-primary tabs-style-3">
-                <div class="tab-menu-heading">
-                    <div class="tabs-menu ">
-                        <!-- Tabs -->
-                        <ul class="nav panel-tabs">
-                            <li class="">
-                                <a href="#tab11" class="active" data-toggle="tab">
-                                    <i class="fa fa-laptop"></i> Asignados
-                                </a>
-                            </li>
-                            <li><a href="#tab12" data-toggle="tab" class=""><i class="fa fa-cube"></i> Pendientes</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="panel-body tabs-menu-body">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab11">
-                            <table class="table w-100" id="tabla-asignados">
-                                <thead>
-                                    <tr>
-                                        <th>Unidad</th>
-                                        <th>Direccion</th>
-                                        <th>Telefóno</th>
-                                        <th>Fecha/Hora</th>
-                                        <th>Operadora</th>
-                                        <th>Tipo</th>
-                                        <th>Accion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="tab12">
-                            <table class="table w-100" id="tabla-reservados">
-                                <thead>
-                                    <tr>
-                                        <th>Unidad</th>
-                                        <th>Direccion</th>
-                                        <th>Telefóno</th>
-                                        <th>Fecha/Hora</th>
-                                        <th>Operadora</th>
-                                        <th>Tipo</th>
-                                        <th>Accion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    <div class="col-12">
+        <div class="card ">
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0">Servicios</h4>
                 </div>
             </div>
+            <div class="card-body table-responsive">
+                <div class="panel panel-primary tabs-style-3">
+                    <div class="tab-menu-heading">
+                        <div class="tabs-menu ">
+                            <!-- Tabs -->
+                            <ul class="nav panel-tabs">
+                                <li class="">
+                                    <a href="#tab11" class="active" data-toggle="tab">
+                                        <i class="fa fa-laptop"></i> Asignados
+                                    </a>
+                                </li>
+                                <li><a href="#tab12" data-toggle="tab" class=""><i class="fa fa-cube"></i> Pendientes</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel-body tabs-menu-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab11">
+                                <table class="table w-100" id="tabla-asignados">
+                                    <thead>
+                                        <tr>
+                                            <th>Unidad</th>
+                                            <th>Direccion</th>
+                                            <th>Telefóno</th>
+                                            <th>Fecha/Hora</th>
+                                            <th>Operadora</th>
+                                            <th>Tipo</th>
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="tab12">
+                                <table class="table w-100" id="tabla-reservados">
+                                    <thead>
+                                        <tr>
+                                            <th>Unidad</th>
+                                            <th>Direccion</th>
+                                            <th>Telefóno</th>
+                                            <th>Fecha/Hora</th>
+                                            <th>Operadora</th>
+                                            <th>Tipo</th>
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
         </div>
     </div>
 </div>
@@ -125,8 +270,6 @@
 
     <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/plugins/datatable/js/dataTables.dataTables.min.js"></script>
-
-    <script src="~/assets/js/form-wizard.js"></script>
 
     <script src="~/assets/plugins/notify/js/notifIt.js"></script>
     <script src="~/assets/plugins/sweet-alert/jquery.sweet-alert.js"></script>
