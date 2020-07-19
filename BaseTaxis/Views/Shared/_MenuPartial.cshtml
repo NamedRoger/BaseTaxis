@@ -26,13 +26,30 @@
                         </a>
                     </li>
                     <li aria-haspopup="true">
-                        <a asp-controller="Asistencias" asp-action="Index" class="">
+                        <span class="horizontalMenu-click">
+                            <i class="horizontalMenu-arrow fe fe-chevron-down"></i>
+                        </span>
+                        <a href="#" class="sub-icon">
                             <i class="si si-user-following"></i>
                             Asistencias
                         </a>
+                        <ul class="sub-menu">
+                            <li aria-haspopup="true">
+                                <a asp-controller="Asistencias" asp-action="Index" class="slide-item"> Unidades</a>
+                            </li>
+                            <li aria-haspopup="true">
+                                <a asp-controller="Bases" asp-action="Asistencias" class="slide-item">A Base</a>
+                            </li>
+                        </ul>
                     </li>
                     @if (User.IsInRole("Admin"))
                     {
+                        <li aria-haspopup="true">
+                            <a asp-controller="Bases" asp-action="Index" class="">
+                                <i class="si si-organization"></i>
+                                Bases
+                            </a>
+                        </li>
                         <li aria-haspopup="true">
                             <a asp-controller="Usuarios" asp-action="Index" class="">
                                 <i class="si si-people"></i>
