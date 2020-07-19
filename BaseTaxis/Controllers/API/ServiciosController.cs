@@ -59,14 +59,21 @@ namespace BaseTaxis.Controllers.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutServicio(Guid id, Servicio servicio)
+        public async Task<IActionResult> PutServicio(Guid id, [FromForm] ServicioDTO servicioDto)
         {
-            if (id != servicio.Id)
+            if (id != Guid.Parse(servicioDto.Id))
             {
                 return BadRequest();
             }
 
-            _context.Entry(servicio).State = EntityState.Modified;
+            var servicio = await _context.Servicios.FindAsync(id);
+
+            
+            servicio.Direccion = servicioDto.Direccion;
+            servicio.FechaHora = DateTime.Parse(servicioDto.FechaHora);
+            servicio.Unidad = servicioDto.Unidad;
+            servicio.IdTipoServicio = Guid.Parse(servicioDto.IdTipoServicio);
+            servicio.IdEstatusServicio = Guid.Parse(servicioDto.IdEstatusServicio);
 
             try
             {
@@ -123,29 +130,29 @@ namespace BaseTaxis.Controllers.API
                 e.Nombre.ToUpper() == "En Espera".ToUpper());
             }
 
+            var nuevoServicio = new Servicio()
+            {
+                IdCliente = cliente.Id,
+                FechaHora = servicio.FechaHora == null ? DateTime.Now : DateTime.Parse(servicio.FechaHora),
+                IdTipoServicio = Guid.Parse(servicio.IdTipoServicio),
+                IdEstatusServicio = estatusServicio.Id,
+                Direccion = servicio.Direccion,
+                Unidad = servicio.Unidad,
+                IdUsuario = Guid.Parse(User.Identity.GetUserId())
+            };
+
             try
             {
-                var nuevoServicio = new Servicio()
-                {
-                    IdCliente = cliente.Id,
-                    FechaHora = servicio.FechaHora == null ?DateTime.Now: DateTime.Parse(servicio.FechaHora),
-                    IdTipoServicio = Guid.Parse(servicio.IdTipoServicio),
-                    IdEstatusServicio = estatusServicio.Id,
-                    Direccion = servicio.Direccion,
-                    Unidad = servicio.Unidad,
-                    IdUsuario = Guid.Parse(User.Identity.GetUserId())
-                };
-
                 _context.Servicios.Add(nuevoServicio);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();  
 
-                return CreatedAtAction("GetServicio", new { id = nuevoServicio.Id }, ServicioToDTO(nuevoServicio));
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            
+
+            return CreatedAtAction("GetServicio", new { id = nuevoServicio.Id }, ServicioToDTO(nuevoServicio));
         }
 
         // DELETE: api/Servicios/5
@@ -187,7 +194,7 @@ namespace BaseTaxis.Controllers.API
             IdEstatusServicio = servicio.IdEstatusServicio.ToString(),
             IdTipoServicio = servicio.IdTipoServicio.ToString(),
             IdUsuario = servicio.IdUsuario.ToString(),
-            Usuario = servicio.User.UserName,
+            Usuario = servicio.User == null ?"":servicio.User.UserName,
             Telefono = servicio.Cliente.Telefono,
             TipoServicio = servicio.TipoServicio.Nombre,
             Unidad = servicio.Unidad

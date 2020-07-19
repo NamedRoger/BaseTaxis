@@ -134,6 +134,10 @@
     }
 
     //----------------------------------- Servicios ---------------------------------------------
+    let findIdxServicio = (id) => {
+        return  Servicios.servicios.findIndex(s => s.id === id);
+    }
+
     let createTableServiciosAsignados = () => {
         let tabla = $(Servicios.tabla.asignados.tag).DataTable({
             data: tranformarInformacionAsignados(Servicios.tabla.asignados.data),
@@ -147,7 +151,7 @@
                 { data: 'acciones' }
             ],
             createdRow: function (row, data, dataIndex) {
-                $(row).attr('id', dataIndex);
+                $(row).attr('id', data.id);
             },
         });
         return tabla;
@@ -166,7 +170,7 @@
                 { data: 'acciones' }
             ],
             createdRow: function (row, data, dataIndex) {
-                $(row).attr('id', dataIndex);
+                $(row).attr('id', data.id);
             },
         });
         return tabla;
@@ -176,8 +180,8 @@
         let btnCancelar = document.querySelectorAll(".btn-cancelar");
         btnCancelar.forEach(btn => {
             btn.onclick = async () => {
-                let servicioIdx = Servicios.servicios.findIndex(s => s.id == btn.dataset.id);
-                let servicio = Servicios.servicios.find(s => s.id == btn.dataset.id);
+                let servicioIdx = findIdxServicio(btn.dataset.id);
+                let servicio = Servicios.servicios[servicioIdx];
 
                 let result = await cancelarServicio(servicio.id);
                 if (result) {
@@ -196,21 +200,57 @@
     let tdToIput = () => {
         let tds = document.querySelectorAll("table tr  td:first-child");
         let input = document.createElement("input");
+        let btnAceptar = document.createElement("button");
+        let btnCancelar = document.createElement("button");
+
+        input.classList.add("form-control");
+        btnAceptar.classList.add("btn", "btn-sm", "btn-success");
+        btnAceptar.innerHTML = `<i class="icon ion-checkmark-outline"></i>`;
+        btnCancelar.classList.add("btn", "btn-sm", "btn-danger");
+
         let activo = false;
+        //console.log(td);
         tds.forEach(td => {
             td.ondblclick = () => {
+                let tr = td.parentElement;
                 let unidad = td.textContent;
                 if (activo) {
-                    td.innerHTML = `${input.value}`;
+                    delteInput(td, input.value);
                     activo = false;
                 } else {
+                    let servicio = Servicios.servicios[(findIdxServicio(tr.id))];
                     td.innerHTML = "";
                     input.value = unidad;
                     td.appendChild(input);
+
+                    btnCancelar.onclick = () => {
+                        delteInput(td, unidad);
+                        activo = false;
+                    }
+
+                    btnAceptar.onclick = async () => {
+                        servicio.unidad = input.value;
+                        let result = await editarServicio(servicio);
+                        if (result.ok) {
+                            notificacion("Se ha actulizado la unidad", "success");
+                            delteInput(td, input.value);
+                            activo = false;
+                        } else {
+                            servicio.unidad = unidad;
+                            notificacion("No se pudo cambiar la unidad","error");
+                        }
+                    }
+
+                    td.appendChild(btnAceptar);
+                    td.appendChild(btnCancelar);
                     activo = true;
                 }
             }
         });
+    }
+
+    let delteInput = (td,value) => {
+        td.innerHTML = `${value}`;
     }
 
     let getServicios = async () => {
@@ -251,8 +291,14 @@
         }
     }
 
-    let editarServicio = async () => {
+    let editarServicio = async (servicio) => {
+        let data = new FormData();
+        for (key in servicio) {
+            data.append(key,servicio[key]);
+        }
 
+        let result = await ajaxHelper(`${Servicios.apiUrl}/${servicio.id}`, "put", data);
+        return result;
     }
 
     let serivicioAsignado = async () => {
@@ -385,10 +431,6 @@ let notificacion = (mensaje, type) => {
     });
 }
 
-function _goToStep(wizard, options, state, index) {
-    return paginationClick(wizard, options, state, index);
-}
-
 
 class Asignado {
     constructor(id,
@@ -435,7 +477,6 @@ class Pendiente {
         this.fechaHora = fechaHora;
         this.idx = idx;
         this.acciones = `<button class="btn btn-sm btn-danger btn-cancelar" data-id=${id}>Cancelar</button>
-            <button class="btn btn-sm btn-success btn-cancelar" data-id=${id}>Asignado</button>
         `;
     }
 }
