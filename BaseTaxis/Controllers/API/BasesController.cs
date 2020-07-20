@@ -29,6 +29,24 @@ namespace BaseTaxis.Controllers.API
             return await _context.Bases.Where(b => b.Actvio).ToListAsync();
         }
 
+        [HttpGet]
+        [Route("asistencias")]
+        public async Task<ActionResult<IEnumerable<BaseUnidad>>> GetBasesAsistencias()
+        {
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            var day = DateTime.Now.Day;
+
+            var asistencias = await _context.BaseUnidades.Where(a => a.Fecha.Year == year)
+                .Where(a => a.Fecha.Month == month)
+                .Where(a => a.Fecha.Day == day)
+                .Where(a => a.Activo)
+                .Include(a => a.Base)
+                .ToListAsync();
+
+            return asistencias;
+        }
+
         // GET: api/Bases/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Base>> GetBase(Guid id)
@@ -88,6 +106,16 @@ namespace BaseTaxis.Controllers.API
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBase", new { id = newBase.Id }, newBase);
+        }
+
+        [HttpPost]
+        [Route("asistencias")]
+        public async Task<ActionResult<BaseUnidad>> PostAsistencia([FromForm] BaseUnidad baseUnidad)
+        {
+            _context.BaseUnidades.Add(baseUnidad);
+            await _context.SaveChangesAsync();
+
+            return Ok(baseUnidad);
         }
 
         // DELETE: api/Bases/5

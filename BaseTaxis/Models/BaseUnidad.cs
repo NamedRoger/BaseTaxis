@@ -12,5 +12,6 @@ namespace BaseTaxis.Models
         public Base Base { get; set; }
         public string Unidad { get; set; }
         public bool Activo { get; set; } = true;
+        public DateTime Fecha { get; set; } = DateTime.Now;
     }
 }
