@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BaseTaxis.Data;
 using BaseTaxis.Models;
+using BaseTaxis.Models.DTO;
 
 namespace BaseTaxis.Controllers.API
 {
@@ -25,7 +26,7 @@ namespace BaseTaxis.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Base>>> GetBases()
         {
-            return await _context.Bases.ToListAsync();
+            return await _context.Bases.Where(b => b.Actvio).ToListAsync();
         }
 
         // GET: api/Bases/5
@@ -46,14 +47,14 @@ namespace BaseTaxis.Controllers.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBase(Guid id, Base @base)
+        public async Task<IActionResult> PutBase(Guid id,[FromForm] BaseDTO @base)
         {
-            if (id != @base.Id)
+            if (id != Guid.Parse(@base.Id))
             {
                 return BadRequest();
             }
-
-            _context.Entry(@base).State = EntityState.Modified;
+            var currentBase = await _context.Bases.FindAsync(id);
+            currentBase.Nombre = @base.Nombre;
 
             try
             {
@@ -78,12 +79,15 @@ namespace BaseTaxis.Controllers.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Base>> PostBase(Base @base)
+        public async Task<ActionResult<Base>> PostBase([FromForm] BaseDTO @base)
         {
-            _context.Bases.Add(@base);
+            var newBase = new Base() { 
+                Nombre = @base.Nombre.ToUpper()
+            };
+            _context.Bases.Add(newBase);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBase", new { id = @base.Id }, @base);
+            return CreatedAtAction("GetBase", new { id = newBase.Id }, newBase);
         }
 
         // DELETE: api/Bases/5
@@ -96,7 +100,7 @@ namespace BaseTaxis.Controllers.API
                 return NotFound();
             }
 
-            _context.Bases.Remove(@base);
+            @base.Actvio = false;
             await _context.SaveChangesAsync();
 
             return @base;

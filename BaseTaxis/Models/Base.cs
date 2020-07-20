@@ -11,7 +11,7 @@ namespace BaseTaxis.Models
         [Key]
         public Guid Id { get; set; }
         public string Nombre { get; set; }
-        public bool Actvio { get; set; }
+        public bool Actvio { get; set; } = true;
 
         public ICollection<BaseUnidad> BaseUnidades { get; set; }
         
