@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BaseTaxis.Controllers
 {
+    [Authorize(Policy = "Activo")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

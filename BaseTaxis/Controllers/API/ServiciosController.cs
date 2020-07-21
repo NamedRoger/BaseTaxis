@@ -155,6 +155,22 @@ namespace BaseTaxis.Controllers.API
             return CreatedAtAction("GetServicio", new { id = nuevoServicio.Id }, ServicioToDTO(nuevoServicio));
         }
 
+        [HttpPut]
+        [Route("Asignar/{id}")]
+        public async Task<IActionResult> AsignarServicio(Guid id,[FromBody] ReservadosWorker reservado)
+        {
+            var servicio = await _context.Servicios.FindAsync(id);
+
+            var estatusServicio = await _context.EstatusServicios.FirstOrDefaultAsync(e => e.Nombre == "Asignado");
+
+            servicio.Unidad = reservado.Unidad;
+            servicio.IdEstatusServicio = estatusServicio.Id;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
         // DELETE: api/Servicios/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServicioDTO>> CancelarServicio(Guid id)

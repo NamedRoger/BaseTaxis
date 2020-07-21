@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using BaseTaxis.Models;
 using Microsoft.CodeAnalysis.Options;
+using BaseTaxis.Hubs;
 
 namespace BaseTaxis
 {
@@ -67,6 +68,9 @@ namespace BaseTaxis
 
             services.AddRazorPages();
 
+            services.AddSignalR();
+            services.AddHostedService<Worker>();
+
             services.AddAuthorization(op => {
                 op.AddPolicy("Activo",policy => policy.RequireClaim("Activo"));
             });
@@ -100,6 +104,7 @@ namespace BaseTaxis
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ClockHub>("/hubs/clock");
             });
         }
     }
