@@ -34,7 +34,7 @@ namespace BaseTaxis
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("BaseTaxis")));
+                    Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>(options => {
                 options.Password.RequireDigit = false;
@@ -54,7 +54,7 @@ namespace BaseTaxis
 
             services.AddControllersWithViews(config => {
 
-                //añande la poiliica para la autorizacion 
+                //aï¿½ande la poiliica para la autorizacion 
                 var policy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .Build();

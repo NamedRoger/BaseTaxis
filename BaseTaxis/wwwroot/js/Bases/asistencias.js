@@ -103,7 +103,7 @@
         });
     }
 
-    let createTabla = (id, data) => {
+    let createTabla = (id) => {
         console.log(Constantes.asistencias.groups[id]);
 
         let table = $("#table-" + id).DataTable({
@@ -139,6 +139,7 @@
         }
 
         notificacion("Se insertó la asistencia", "success");
+        window.location.reload();
         Constantes.formulario.tag.reset();
         
     }
