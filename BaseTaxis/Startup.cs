@@ -34,7 +34,7 @@ namespace BaseTaxis
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("BaseTaxis")));
+                    Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>(options => {
                 options.Password.RequireDigit = false;

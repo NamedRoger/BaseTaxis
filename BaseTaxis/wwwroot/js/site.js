@@ -17,7 +17,7 @@
         }
 
 
-        connection.on("ServiciosReservados", function (res) {
+        var onConnection =  connection.on("ServiciosReservados", function (res) {
             let notifys = localStorage.getItem("notify");
             let notitysArr, countNotify = 0;
             countNotify = res.length;
@@ -47,12 +47,13 @@
             }
             console.log(JSON.parse(notifys).length, countNotify);
             if (countNotify > JSON.parse(notifys).length || countNotify < JSON.parse(notifys).length) {
-                console.log("hola");
+                shownotifys();
+            }else{
                 shownotifys();
             }
         });
 
-        shownotifys();
+        
 
 
         //connection.onclose(async () => {
@@ -60,9 +61,7 @@
         //});
 
         start();
-        function desplegarAlerta() {
-            
-        }
+        
 
         function shownotifys() {
             let notifysDiv = document.querySelector("#notifys");
