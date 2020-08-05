@@ -70,7 +70,8 @@ namespace BaseTaxis.API.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                var resultUpdateUser = await _userManager.UpdateAsync(usuario);
+                await _userManager.ChangePasswordAsync(usuario,usuario.PasswordHash,user.Password);
             }
             catch (DbUpdateConcurrencyException)
             {
