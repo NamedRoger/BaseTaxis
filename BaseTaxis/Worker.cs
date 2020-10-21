@@ -58,7 +58,7 @@ namespace BaseTaxis
                         })
                         .ToListAsync();
 
-                    _logger.LogInformation("Worker running at: {Time}", DateTime.Now);
+                    // _logger.LogInformation("Worker running at: {Time}", DateTime.Now);
                     await _clockHub.Clients.All.ServiciosReservados(reservados);
                     await Task.Delay(1000);
                 }

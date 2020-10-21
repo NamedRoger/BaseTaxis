@@ -24,36 +24,39 @@ namespace BaseTaxis
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _env = environment;
         }
 
         public IConfiguration Configuration { get; }
+        private IWebHostEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // if(environment.IsProduction())
-            // {
-            //     services.AddDbContext<ApplicationDbContext>(builder => {
-            //         builder.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
-            //         mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MariaDb));
-            //     });
-            // }
-            // else
-            // {
-            //     services.AddDbContext<ApplicationDbContext>(op => 
-            //         op.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
-            //         mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MySql)
-            //         ).UseLoggerFactory(
-            //             LoggerFactory.Create(
-            //                 logging => logging
-            //                     .AddConsole()
-            //                     .AddFilter(level => level >= LogLevel.Information)))
-            //         .EnableSensitiveDataLogging()
-            //         .EnableDetailedErrors());
-            // }
+            if(_env.IsProduction())
+            {
+                Console.WriteLine(_env.EnvironmentName);
+                // services.AddDbContext<ApplicationDbContext>(builder => {
+                //     builder.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
+                //     mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MariaDb));
+                // });
+            }
+            else
+            {
+                // services.AddDbContext<ApplicationDbContext>(op => 
+                //     op.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
+                //     mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MySql)
+                //     ).UseLoggerFactory(
+                //         LoggerFactory.Create(
+                //             logging => logging
+                //                 .AddConsole()
+                //                 .AddFilter(level => level >= LogLevel.Information)))
+                //     .EnableSensitiveDataLogging()
+                //     .EnableDetailedErrors());
+            }
             services.AddDbContext<ApplicationDbContext>(op => 
                     op.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
                     mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MySql)
