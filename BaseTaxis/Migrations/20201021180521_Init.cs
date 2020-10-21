@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BaseTaxis.Data.Migrations
+namespace BaseTaxis.Migrations
 {
-    public partial class Intial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,8 +54,11 @@ namespace BaseTaxis.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Genero = table.Column<bool>(nullable: false),
-                    Direccion = table.Column<string>(nullable: true)
+                    Nombre = table.Column<string>(nullable: true),
+                    Apellido = table.Column<string>(nullable: true),
+                    Genero = table.Column<string>(nullable: true),
+                    Direccion = table.Column<string>(nullable: true),
+                    Activo = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,7 +125,7 @@ namespace BaseTaxis.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -142,7 +146,7 @@ namespace BaseTaxis.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -223,19 +227,20 @@ namespace BaseTaxis.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BaseUnidades",
+                name: "base_unidad",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IdBase = table.Column<Guid>(nullable: false),
                     Unidad = table.Column<string>(nullable: true),
-                    Activo = table.Column<bool>(nullable: false)
+                    Activo = table.Column<bool>(nullable: false),
+                    Fecha = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BaseUnidades", x => x.Id);
+                    table.PrimaryKey("PK_base_unidad", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BaseUnidades_Bases_IdBase",
+                        name: "FK_base_unidad_Bases_IdBase",
                         column: x => x.IdBase,
                         principalTable: "Bases",
                         principalColumn: "Id",
@@ -252,7 +257,8 @@ namespace BaseTaxis.Data.Migrations
                     IdTipoServicio = table.Column<Guid>(nullable: false),
                     IdEstatusServicio = table.Column<Guid>(nullable: false),
                     Unidad = table.Column<string>(nullable: true),
-                    FechaHora = table.Column<DateTime>(nullable: false)
+                    FechaHora = table.Column<DateTime>(nullable: false),
+                    IdUsuario = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,6 +281,12 @@ namespace BaseTaxis.Data.Migrations
                         principalTable: "TipoServicios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Servicios_AspNetUsers_IdUsuario",
+                        column: x => x.IdUsuario,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -286,8 +298,7 @@ namespace BaseTaxis.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -313,12 +324,11 @@ namespace BaseTaxis.Data.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BaseUnidades_IdBase",
-                table: "BaseUnidades",
+                name: "IX_base_unidad_IdBase",
+                table: "base_unidad",
                 column: "IdBase");
 
             migrationBuilder.CreateIndex(
@@ -335,6 +345,11 @@ namespace BaseTaxis.Data.Migrations
                 name: "IX_Servicios_IdTipoServicio",
                 table: "Servicios",
                 column: "IdTipoServicio");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Servicios_IdUsuario",
+                table: "Servicios",
+                column: "IdUsuario");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -358,16 +373,13 @@ namespace BaseTaxis.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BaseUnidades");
+                name: "base_unidad");
 
             migrationBuilder.DropTable(
                 name: "Servicios");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Bases");
@@ -380,6 +392,9 @@ namespace BaseTaxis.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "TipoServicios");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

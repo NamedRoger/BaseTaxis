@@ -52,6 +52,7 @@ namespace BaseTaxis.Data
             });
 
             builder.Entity<BaseUnidad>(entity => {
+                entity.ToTable("base_unidad");
                 entity.HasKey(bu => bu.Id);
 
                 entity.HasOne(bu => bu.Base)

@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using BaseTaxis.Models;
 using Microsoft.CodeAnalysis.Options;
 using BaseTaxis.Hubs;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace BaseTaxis
 {
@@ -32,9 +34,38 @@ namespace BaseTaxis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            // if(environment.IsProduction())
+            // {
+            //     services.AddDbContext<ApplicationDbContext>(builder => {
+            //         builder.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
+            //         mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MariaDb));
+            //     });
+            // }
+            // else
+            // {
+            //     services.AddDbContext<ApplicationDbContext>(op => 
+            //         op.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
+            //         mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MySql)
+            //         ).UseLoggerFactory(
+            //             LoggerFactory.Create(
+            //                 logging => logging
+            //                     .AddConsole()
+            //                     .AddFilter(level => level >= LogLevel.Information)))
+            //         .EnableSensitiveDataLogging()
+            //         .EnableDetailedErrors());
+            // }
+            services.AddDbContext<ApplicationDbContext>(op => 
+                    op.UseMySql(Configuration.GetConnectionString("BaseTaxis"),
+                    mySqlOptions => mySqlOptions.ServerVersion(new Version(5,7,31),ServerType.MySql)
+                    ).UseLoggerFactory(
+                        LoggerFactory.Create(
+                            logging => logging
+                                .AddConsole()
+                                .AddFilter(level => level >= LogLevel.Information)))
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors());
+
+            
 
             services.AddDefaultIdentity<User>(options => {
                 options.Password.RequireDigit = false;
@@ -90,7 +121,7 @@ namespace BaseTaxis
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

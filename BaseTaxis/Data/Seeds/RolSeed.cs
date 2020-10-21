@@ -24,7 +24,7 @@ namespace BaseTaxis.Data.Seeds
                 };
 
                 roleManager.CreateAsync(adminRol).Wait();
-                roleManager.CreateAsync(new IdentityRole<Guid> { Name = "Operdador" }).Wait();
+                roleManager.CreateAsync(new IdentityRole<Guid> { Name = "Operador" }).Wait();
 
             }
         }
